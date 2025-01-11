@@ -1,2 +1,5 @@
+
 # picsart-masonry
-implement a virtualized masonry grid
+
+### React + TypeScript + Vite
+implementing a virtualized masonry grid
