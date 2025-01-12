@@ -8,7 +8,9 @@ import { arrangeHeightBalance } from './utils/arrange-height-balance-pins';
 // 3- arrange the photos with the calculated abosolute positioning in the arrangeHeight util and create masonry layout
 
 // 2- check if its better idea to keep them in custom hook - maybe later
+
 // 4- create provider to fetch the list
+// infinite scroll
 // 5- Consume the fetcheddata to render the mesonry
 // 6- load the first fetch in the server side
 // 7- introduce the react context to save the state

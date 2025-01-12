@@ -1,4 +1,4 @@
-export type PhotoSrc = {
+export interface PhotoSrc {
 	original: string;
 	large2x: string;
 	large: string;
@@ -7,9 +7,10 @@ export type PhotoSrc = {
 	portrait: string;
 	landscape: string;
 	tiny: string;
-};
+}
 
-export type Photo = {
+// Represents a single photo in the `photos` array
+export interface Photo {
 	id: number;
 	width: number;
 	height: number;
@@ -21,4 +22,13 @@ export type Photo = {
 	src: PhotoSrc;
 	liked: boolean;
 	alt: string;
-};
+}
+
+// Represents the entire response from the Pexels API
+export interface CuratedPhotosResponse {
+	page: number;
+	per_page: number;
+	photos: Photo[];
+	total_results: number;
+	next_page?: string;
+}

@@ -1,4 +1,4 @@
-import { Photo } from '../types';
+import { Photo } from '../services/photos/types';
 
 type ArrangeHeightBalance = (
 	photos: Photo[],
@@ -13,23 +13,17 @@ export const arrangeHeightBalance: ArrangeHeightBalance = (
 	GAP = 10,
 	COL_WIDTH = 70
 ) => {
-	const columnHeights = Array(NUM_COLS).fill(0);
-
+	const columnHeights: number[] = Array<number>(NUM_COLS).fill(0);
 	// For each photo, add the position data.
 	return photos.map((photo) => {
 		const height = photo.height / 20;
 		// Find the shortest column.
-		let shortestCol = 0;
-		for (let i = 1; i < NUM_COLS; i++) {
-			if (columnHeights[i] < columnHeights[shortestCol]) {
-				shortestCol = i;
-			}
-		}
+		const shortestCol = columnHeights.indexOf(Math.min(...columnHeights));
 
 		// Calculate the `left` value of the current pin.
-		const left = shortestCol * COL_WIDTH + Math.max(shortestCol, 0) * GAP;
+		const left = shortestCol * COL_WIDTH + shortestCol * GAP;
 		// Calculate the `top` value of the current pin.
-		const top = GAP + columnHeights[shortestCol];
+		const top: number = GAP + columnHeights[shortestCol];
 		// Update the column height.
 		columnHeights[shortestCol] = top + height;
 
