@@ -20,9 +20,9 @@ export const arrangeHeightBalance: ArrangeHeightBalance = (
 		// Find the shortest column.
 		const shortestCol = columnHeights.indexOf(Math.min(...columnHeights));
 
-		// Calculate the `left` value of the current pin.
+		// Calculate the `left` value of the current photo.
 		const left = shortestCol * COL_WIDTH + shortestCol * GAP;
-		// Calculate the `top` value of the current pin.
+		// Calculate the `top` value of the current photo.
 		const top: number = GAP + columnHeights[shortestCol];
 		// Update the column height.
 		columnHeights[shortestCol] = top + height;

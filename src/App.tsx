@@ -15,7 +15,6 @@ import { arrangeHeightBalance } from './utils/arrange-height-balance-pins';
 // 6- load the first fetch in the server side
 // 7- introduce the react context to save the state
 // 8- implement pagination
-// 9- Introduce the prettier
 
 const App: React.FC = () => {
 	// const [photoList] = useState<Photo[]>(photosMock.photos);

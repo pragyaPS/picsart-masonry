@@ -1,10 +1,9 @@
 import axios, { AxiosInstance } from 'axios';
 
 const axiosInstance: AxiosInstance = axios.create({
-	baseURL: 'https://api.pexels.com/v1',
+	baseURL: import.meta.env.VITE_API_URL as string,
 	headers: {
-		Authorization:
-			'Bearer RSmRYrbl1JYbkRHJripqbLbE26ZzqKD08Mm0FjjjjSniU6cEoZAu2d3Q', // hardcoding for now will move to env
+		Authorization: `Bearer ${import.meta.env.VITE_PEXELS_API_KEY}`,
 	},
 });
 
