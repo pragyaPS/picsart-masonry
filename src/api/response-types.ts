@@ -1,3 +1,11 @@
+interface Pagination {
+	url?: string;
+	page: number;
+	per_page: number;
+	next_page: string;
+	total_results: number;
+}
+
 export interface PhotoSrc {
 	original: string;
 	large2x: string;
@@ -9,26 +17,18 @@ export interface PhotoSrc {
 	tiny: string;
 }
 
-// Represents a single photo in the `photos` array
 export interface Photo {
 	id: number;
 	width: number;
 	height: number;
 	url: string;
+	alt: string;
+	avg_color: string;
 	photographer: string;
 	photographer_url: string;
 	photographer_id: number;
-	avg_color: string;
-	src: PhotoSrc;
 	liked: boolean;
-	alt: string;
+	src: PhotoSrc;
 }
 
-// Represents the entire response from the Pexels API
-export interface CuratedPhotosResponse {
-	page: number;
-	per_page: number;
-	photos: Photo[];
-	total_results: number;
-	next_page?: string;
-}
+export type CuratedPhotosResponse = { photos: Photo[] } & Pagination;

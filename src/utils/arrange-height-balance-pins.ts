@@ -1,4 +1,4 @@
-import { Photo } from '../services/photos/types';
+import { Photo } from '../api/response-types';
 
 type ArrangeHeightBalance = (
 	photos: Photo[],

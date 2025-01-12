@@ -1,29 +1,45 @@
-import React from 'react';
-import { photosMock } from './photos-mock';
+import React, { useEffect } from 'react';
 import './App.css';
 import { buildSrcSet } from './utils/build-src-set';
 import { arrangeHeightBalance } from './utils/arrange-height-balance-pins';
+import { fetchCuratedPhotos } from './api/get-curated-photos';
+import { CuratedPhotosResponse, Photo } from './api/response-types';
 
-// 1- set the arrangeHeight Props in the state
-// 3- arrange the photos with the calculated abosolute positioning in the arrangeHeight util and create masonry layout
+interface PhotoWithAbsolutePosition extends Photo {
+	top: number;
+	left: number;
+}
+interface PhotoState extends Omit<CuratedPhotosResponse, 'photos'>  {
+	photos: PhotoWithAbsolutePosition[];
+  };
+const initialPhotoState: PhotoState = {
+	photos: [],
+	page: 0,
+	per_page: 0,
+	total_results: 0,
+	next_page: '',
+  };
 
-// 2- check if its better idea to keep them in custom hook - maybe later
-
-// 4- create provider to fetch the list
-// infinite scroll
-// 5- Consume the fetcheddata to render the mesonry
-// 6- load the first fetch in the server side
-// 7- introduce the react context to save the state
-// 8- implement pagination
 
 const App: React.FC = () => {
-	// const [photoList] = useState<Photo[]>(photosMock.photos);
-	const photoList = arrangeHeightBalance(photosMock.photos, 4, 10, 100);
-	console.log(photoList.map(({ top, left }) => ({ top, left })));
+	const [photData, setPhotoData] = React.useState<PhotoState>(initialPhotoState);
+	useEffect(() => {
+		const fetchPhotos = async () => {
+			const response =  await fetchCuratedPhotos();
+			setPhotoData({
+				photos: arrangeHeightBalance(response.photos, 4, 10, 100),
+				page: response.page,
+				per_page: response.per_page,
+				total_results: response.total_results,
+				next_page: response.next_page,
+			  });
+		};
+		fetchPhotos().catch(error => console.error('Error fetching photos:', error));
+	}, []);
 
 	return (
 		<div className="photo-list-container">
-			{photoList.map(({ id, height, width, top, left, src, alt }) => (
+			{photData.photos.map(({ id, height, width, top, left, src, alt }) => (
 				<div key={id} className="photo-grid" style={{ top, left }}>
 					<img
 						alt={alt}
