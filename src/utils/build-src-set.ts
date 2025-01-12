@@ -1,6 +1,6 @@
-import { PhotoSrc } from "../types";
+import { PhotoSrc } from '../types';
 export const buildSrcSet = (src: PhotoSrc): string => {
-    return `
+	return `
       ${src.small} 130w,
       ${src.medium} 350w,
       ${src.large} 650w,
@@ -8,4 +8,4 @@ export const buildSrcSet = (src: PhotoSrc): string => {
       ${src.portrait} 800w,
       ${src.landscape} 1200w
     `;
-  };
+};
