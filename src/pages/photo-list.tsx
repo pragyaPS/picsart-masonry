@@ -10,6 +10,7 @@ interface PhotoWithAbsolutePosition extends Photo {
 }
 interface PhotoState extends Omit<CuratedPhotosResponse, 'photos'> {
 	photos: PhotoWithAbsolutePosition[];
+	totalHeight: number;
 }
 const initialPhotoState: PhotoState = {
 	photos: [],
@@ -17,19 +18,45 @@ const initialPhotoState: PhotoState = {
 	per_page: 20,
 	total_results: 0,
 	next_page: '',
+	totalHeight: 0,
 };
 
 const PhotoList: React.FC = () => {
 	const [photoData, setPhotoData] = useState<PhotoState>(initialPhotoState);
 	const [loading, setLoading] = useState(false);
 	const [currentPage, setCurrentPage] = useState(1);
-	const observerRef = useRef<IntersectionObserver | null>(null);
 	const lastPhotoRef = useRef<HTMLDivElement | null>(null);
 	const columnHeights = useRef<Array<number>>(Array<number>(4).fill(0));
+	const [visiblePhotos, setVisiblePhotos] = useState<
+		PhotoWithAbsolutePosition[]
+	>([]);
+	const scrollContainerRef = useRef<HTMLDivElement>(null);
+	const debounceTimeout = useRef<number | null>(null);
+
+	const handleScroll = useCallback(() => {
+		console.time('handleScroll');
+		const container = scrollContainerRef.current;
+		if (!container) return;
+
+		const scrollTop = container.scrollTop;
+		const viewportHeight = container.clientHeight;
+		console.log({ scrollTop, viewportHeight });
+
+		// Calculate the visible range
+		const start = scrollTop - 200; // Add some buffer space
+		const end = scrollTop + viewportHeight + 200;
+
+		// Filter photos within the visible range
+		const visible = photoData.photos.filter(
+			(photo) => photo.top + photo.height >= start && photo.top <= end
+		);
+
+		setVisiblePhotos(visible);
+		console.timeEnd('handleScroll');
+	}, [photoData.photos]);
 
 	const fetchPhotos = useCallback(
 		async (page: number, per_page: number = 20) => {
-			// if (page > 2) return;
 			setLoading(true);
 			const response = await fetchCuratedPhotos({
 				page: page,
@@ -42,7 +69,7 @@ const PhotoList: React.FC = () => {
 						response.photos,
 						4,
 						10,
-						100,
+						180,
 						columnHeights.current
 					),
 				],
@@ -50,11 +77,50 @@ const PhotoList: React.FC = () => {
 				per_page: response.per_page,
 				total_results: response.total_results,
 				next_page: response.next_page,
+				totalHeight: columnHeights.current.reduce((acc, height) => {
+					return Math.max(acc, height);
+				}),
 			}));
-			// setCurrentPage(response.page);
 		},
 		[]
 	);
+
+	// Debounce Wrapper
+	const debouncedScrollHandler = useCallback(() => {
+		if (debounceTimeout.current) {
+			clearTimeout(debounceTimeout.current);
+		}
+
+		debounceTimeout.current = setTimeout(() => {
+			handleScroll();
+		}, 10);
+	}, [handleScroll]);
+
+	// Attach scroll event listener
+	useEffect(() => {
+		const container = scrollContainerRef.current;
+		if (!container) return;
+
+		container.addEventListener('scroll', debouncedScrollHandler);
+		debouncedScrollHandler(); // Trigger initially to calculate visible photos
+
+		return () => {
+			container.removeEventListener('scroll', debouncedScrollHandler);
+		};
+	}, [debouncedScrollHandler]);
+
+	useEffect(() => {
+		if (!loading && photoData.photos.length > 0) {
+			const lastPhoto = photoData.photos[photoData.photos.length - 1];
+			if (
+				lastPhoto &&
+				lastPhoto.top <= scrollContainerRef.current!.scrollTop + 1000
+			) {
+				setCurrentPage((prev) => prev + 1);
+			}
+		}
+	});
+
 	useEffect(() => {
 		setLoading(true);
 		fetchPhotos(currentPage)
@@ -62,51 +128,28 @@ const PhotoList: React.FC = () => {
 			.finally(() => setLoading(false));
 	}, [fetchPhotos, currentPage]);
 
-	useEffect(() => {
-		// set up the intersection observer
-		if (observerRef.current) {
-			observerRef.current.disconnect();
-		}
-		observerRef.current = new IntersectionObserver(
-			(entries) => {
-				if (entries[0].isIntersecting && !loading) {
-					setCurrentPage((prevPage) => prevPage + 1);
-				}
-			},
-			{ root: null, rootMargin: '10px', threshold: 1 }
-		); // triggers when 10% of the last photo is visible
-		if (lastPhotoRef.current) {
-			observerRef.current.observe(lastPhotoRef.current);
-		}
-		return () => {
-			if (observerRef.current) {
-				observerRef.current.disconnect();
-			}
-		};
-	}, [loading]);
-
 	return (
-		<div className="photo-list-container">
-			{photoData.photos.map(
-				({ id, height, width, top, left, src, alt }, index) => {
-					const isLastPhoto = index === photoData.photos.length - 1;
-					return (
-						<div
-							key={`${index}-${id}`}
-							className={`photo-grid ${isLastPhoto ? 'last-photo' : ''}`}
-							style={{ top, left }}
-							ref={isLastPhoto ? lastPhotoRef : null}
-						>
-							<img
-								alt={alt}
-								src={src.original}
-								srcSet={buildSrcSet(src)}
-								style={{ height, width }}
-							/>
-						</div>
-					);
-				}
-			)}
+		<div className="photo-list-container" ref={scrollContainerRef}>
+			{visiblePhotos.map(({ id, height, width, top, left, src, alt }) => {
+				const isLastPhoto =
+					id === photoData.photos[photoData.photos.length - 1]?.id;
+				return (
+					<div
+						key={`${id}`}
+						className={`photo-grid ${isLastPhoto ? 'last-photo' : ''}`}
+						style={{ top, left, height, width, backgroundColor: '#57504f' }}
+						ref={isLastPhoto ? lastPhotoRef : null}
+					>
+						<img
+							alt={alt}
+							src={src.original}
+							fetchPriority="auto"
+							srcSet={buildSrcSet(src)}
+							style={{ color: 'transparent', height: '100%', width: '100%' }}
+						/>
+					</div>
+				);
+			})}
 		</div>
 	);
 };
