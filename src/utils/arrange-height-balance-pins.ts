@@ -4,16 +4,17 @@ type ArrangeHeightBalance = (
 	photos: Photo[],
 	NUM_COLUMN?: number,
 	gap?: number,
-	COL_WIDTH?: number
+	COL_WIDTH?: number,
+	columnHeights?: number[]
 ) => Array<Photo & { top: number; left: number; width: number }>;
 
 export const arrangeHeightBalance: ArrangeHeightBalance = (
 	photos,
 	NUM_COLS = 3,
 	GAP = 10,
-	COL_WIDTH = 70
+	COL_WIDTH = 70,
+	columnHeights = Array(NUM_COLS).fill(0)
 ) => {
-	const columnHeights: number[] = Array<number>(NUM_COLS).fill(0);
 	// For each photo, add the position data.
 	return photos.map((photo) => {
 		const height = photo.height / 20;
