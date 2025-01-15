@@ -1,4 +1,4 @@
-import { PhotoSrc } from '../types';
+import { PhotoSrc } from '../api/response-types';
 export const buildSrcSet = (src: PhotoSrc): string => {
 	return `
       ${src.small} 130w,

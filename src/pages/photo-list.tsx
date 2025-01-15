@@ -3,6 +3,7 @@ import { buildSrcSet } from '../utils/build-src-set';
 import { arrangeHeightBalance } from '../utils/arrange-height-balance-pins';
 import { fetchCuratedPhotos } from '../api/get-curated-photos';
 import { CuratedPhotosResponse, Photo } from '../api/response-types';
+import { useNavigate } from 'react-router-dom';
 
 interface PhotoWithAbsolutePosition extends Photo {
 	top: number;
@@ -27,6 +28,8 @@ const PhotoList: React.FC = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const lastPhotoRef = useRef<HTMLDivElement | null>(null);
 	const columnHeights = useRef<Array<number>>(Array<number>(4).fill(0));
+	const navigate = useNavigate();
+
 	const [visiblePhotos, setVisiblePhotos] = useState<
 		PhotoWithAbsolutePosition[]
 	>([]);
@@ -54,6 +57,9 @@ const PhotoList: React.FC = () => {
 		setVisiblePhotos(visible);
 		console.timeEnd('handleScroll');
 	}, [photoData.photos]);
+	const handlePhotoClick = async (id: number) => {
+		await navigate(`/details/${id}`);
+	};
 
 	const fetchPhotos = useCallback(
 		async (page: number, per_page: number = 20) => {
@@ -139,6 +145,11 @@ const PhotoList: React.FC = () => {
 						className={`photo-grid ${isLastPhoto ? 'last-photo' : ''}`}
 						style={{ top, left, height, width, backgroundColor: '#57504f' }}
 						ref={isLastPhoto ? lastPhotoRef : null}
+						onClick={() => {
+							handlePhotoClick(id).catch((error) =>
+								console.error('Error navigating to photo details:', error)
+							);
+						}}
 					>
 						<img
 							alt={alt}
