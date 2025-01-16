@@ -14,6 +14,7 @@ The `PhotoList` component is implemented using a masonry virtualized component. 
 - **TypeScript**: A typed superset of JavaScript that compiles to plain JavaScript.
 - **React Router**: A library for routing in React applications.
 - **Vite**: A fast build tool and development server for modern web projects.
+- **Jest**: For running unit tests
 - **Yarn**: Used for dependency management.
 
 ## How to Run Locally

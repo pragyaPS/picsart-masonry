@@ -7,5 +7,5 @@ export default {
     moduleNameMapper: {
         "\\.(css)$": "identity-obj-proxy",
     },
-    setupfilesAfterEnv: ["<rootDir>/src/test/jest/rtl.setup.ts"],
+    setupFilesAfterEnv: ["<rootDir>/src/test/jest/rtl.setup.ts"],
 }
