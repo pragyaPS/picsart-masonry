@@ -12,11 +12,14 @@ export function PhotoDetails() {
 	const [photo, setPhoto] = useState<Photo | null>(null);
 
 	useEffect(() => {
+		let ignore = false;
 		const fetchPhotoDetails = async (id: number) => {
 			try {
 				const photoData = await fetchPhotoById(id);
-
-				setPhoto(photoData);
+				// to handle race condition if user navigates to another photo
+				if (!ignore) {
+					setPhoto(photoData);
+				}
 			} catch (error) {
 				console.error('Failed to fetch photo:', error);
 			}
@@ -24,6 +27,9 @@ export function PhotoDetails() {
 		fetchPhotoDetails(Number(params.photoId)).catch((error) => {
 			console.error('Failed to fetch photo:', error);
 		});
+		return () => {
+			ignore = true;
+		};
 	}, [params.photoId]);
 	if (!photo) {
 		return <div>Loading ...</div>;
