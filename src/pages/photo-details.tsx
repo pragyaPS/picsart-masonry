@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import './photo-details.css';
 import { fetchPhotoById } from '../api/get-single-photo';
 import { Photo } from '../api/response-types';
 import { buildSrcSet } from '../utils/build-src-set';
+import PhotoCard from '../components/photo-card';
 
 export function PhotoDetails() {
 	const params = useParams();
@@ -27,24 +28,15 @@ export function PhotoDetails() {
 		return <div>Loading ...</div>;
 	}
 	return (
-		<div
-			className="photo-details-container"
-			style={{ backgroundColor: photo?.avg_color }}
-		>
-			<div>
-				<img
-					alt={photo?.alt}
-					src={photo?.src.original}
-					fetchPriority="auto"
-					srcSet={buildSrcSet(photo?.src)}
-					style={{ color: 'transparent', height: '100%', width: '100%' }}
-				/>
-			</div>
-			<div className="photo-details">
-				<h2>{photo?.photographer}</h2>
-				<p>{photo?.liked}</p>
-				<p>{photo?.avg_color}</p>
-			</div>
+		<div className="photo-details-container">
+			<Link to="/">&larr; Back to Photos</Link>
+			<PhotoCard
+				url={photo.src.original}
+				srcSet={buildSrcSet(photo?.src)}
+				description={photo.alt}
+				author={photo.photographer}
+				bgColor={photo.avg_color}
+			/>
 		</div>
 	);
 }

@@ -1,7 +1,7 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
-import PhotoList from './pages/photo-list';
 import PhotoDetails from './pages/photo-details';
+import PhotoList from './pages/photo-list';
 
 function App() {
 	return (

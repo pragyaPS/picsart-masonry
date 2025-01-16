@@ -1,0 +1,32 @@
+.photo-card-container {
+	display: grid;
+	place-items: center;
+}
+
+.photo-card-container .photo-card {
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.photo-card img {
+	height: auto;
+	object-fit: cover;
+	max-width: 100%;
+}
+
+.photo-card .author-info {
+	margin: 0;
+}
+
+.photo-card .photo-info {
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.photo-card .photo-description {
+	margin: 0;
+	color: #444;
+}
