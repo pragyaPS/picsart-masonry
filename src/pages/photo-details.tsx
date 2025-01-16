@@ -5,6 +5,7 @@ import { fetchPhotoById } from '../api/get-single-photo';
 import { Photo } from '../api/response-types';
 import { buildSrcSet } from '../utils/build-src-set';
 import PhotoCard from '../components/photo-card';
+import ErrorBoundary from '../components/error-boundary/error-boundary';
 
 export function PhotoDetails() {
 	const params = useParams();
@@ -30,13 +31,15 @@ export function PhotoDetails() {
 	return (
 		<div className="photo-details-container">
 			<Link to="/">&larr; Back to Photos</Link>
-			<PhotoCard
-				url={photo.src.original}
-				srcSet={buildSrcSet(photo?.src)}
-				description={photo.alt}
-				author={photo.photographer}
-				bgColor={photo.avg_color}
-			/>
+			<ErrorBoundary message="Failed to load photo details">
+				<PhotoCard
+					url={photo.src.original}
+					srcSet={buildSrcSet(photo?.src)}
+					description={photo.alt}
+					author={photo.photographer}
+					bgColor={photo.avg_color}
+				/>
+			</ErrorBoundary>
 		</div>
 	);
 }

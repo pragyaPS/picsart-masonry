@@ -5,6 +5,7 @@ import { MasonryVirtualizedLayout } from '../components/masonry-virtualised/maso
 import { PhotoWithPositionData } from '../types/photo';
 import PhotoItem from '../components/photo-item';
 import { useNavigate } from 'react-router-dom';
+import ErrorBoundary from '../components/error-boundary/error-boundary';
 
 const PER_PAGE_PHOTOS = 20;
 
@@ -53,15 +54,17 @@ const PhotoList: React.FC = () => {
 
 	return (
 		<div className="photo-list-container" ref={scrollContainerRef}>
-			<MasonryVirtualizedLayout
-				items={photoData}
-				perPageItems={PER_PAGE_PHOTOS}
-				hasMore={true}
-				onLoadMore={() => setPage((prev) => prev + 1)}
-				loading={loading}
-				renderItem={renderPhoto}
-				scrollContainerRef={scrollContainerRef}
-			/>
+			<ErrorBoundary message="Failed to load photos">
+				<MasonryVirtualizedLayout
+					items={photoData}
+					perPageItems={PER_PAGE_PHOTOS}
+					hasMore={true}
+					onLoadMore={() => setPage((prev) => prev + 1)}
+					loading={loading}
+					renderItem={renderPhoto}
+					scrollContainerRef={scrollContainerRef}
+				/>
+			</ErrorBoundary>
 		</div>
 	);
 };
