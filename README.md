@@ -64,3 +64,6 @@ The `PhotoList` component is implemented using a masonry virtualized component. 
 - **Avoid Recalculation on Page Switch:**
   - Optimize the application to avoid unnecessary recalculations when switching between pages.
 
+- **TypeScript Aliases:**
+  - Use TypeScript path aliases to simplify imports and improve code readability.
+
