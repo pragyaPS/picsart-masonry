@@ -10,7 +10,7 @@ export const arrangeHeightBalance = <T extends { height: number }>({
 	items,
 	columnCount = 3,
 	gap = 10,
-	colWidth = 70,
+	colWidth = 120,
 	columnHeights = Array<number>(columnCount).fill(0),
 }: ArrangeHeightBalanceArgs<T>): Array<
 	T & { top: number; left: number; width: number }
