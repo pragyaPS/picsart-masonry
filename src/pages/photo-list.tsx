@@ -13,6 +13,7 @@ const PhotoList: React.FC = () => {
 	const [photoData, setPhotoData] = useState<PhotoWithPositionData[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [page, setPage] = useState(1);
+	const [totalCount, setTotalCount] = useState(0);
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const navigate = useNavigate();
 
@@ -33,6 +34,7 @@ const PhotoList: React.FC = () => {
 				left: 0,
 			}));
 			setPhotoData((prev) => [...prev, ...mappedPhotos]);
+			setTotalCount(response.total_results);
 		} catch (error) {
 			console.error('Error fetching photos:', error);
 		} finally {
@@ -58,7 +60,7 @@ const PhotoList: React.FC = () => {
 				<MasonryVirtualizedLayout
 					items={photoData}
 					perPageItems={PER_PAGE_PHOTOS}
-					hasMore={true}
+					hasMore={photoData.length < totalCount}
 					onLoadMore={() => setPage((prev) => prev + 1)}
 					loading={loading}
 					renderItem={renderPhoto}
