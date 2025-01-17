@@ -35,8 +35,7 @@ export async function pexelFetchWrapper<T>(
 				url.searchParams.append(key, String(params[key]));
 			}
 		});
-		console.log({ url, finalOptions });
-		const response = await fetch(url.toString(), finalOptions);
+		const response = await fetch(url, finalOptions);
 		if (!response.ok) {
 			const errorData = (await response.json()) as { message: string };
 

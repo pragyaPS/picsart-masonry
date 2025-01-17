@@ -24,7 +24,7 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
 			}}
 		>
 			<div className="photo-card">
-				<img alt={description} src={url} fetchPriority="auto" srcSet={srcSet} />
+				<img alt={description} src={url} srcSet={srcSet} />
 			</div>
 			{/* Content Section */}
 			<div className="photo-info">
