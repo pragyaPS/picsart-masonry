@@ -1,4 +1,4 @@
-import { pexelBaseUrl } from './constants';
+import { PEXELS_API_KEY, PEXEL_BASE_URL } from './constants';
 import { QueryParams } from './request-types';
 
 export async function pexelFetchWrapper<T>(
@@ -6,8 +6,7 @@ export async function pexelFetchWrapper<T>(
 	params: QueryParams = {},
 	options: RequestInit = {}
 ): Promise<T> {
-	const API_KEY: string = import.meta.env.VITE_PEXELS_API_KEY as string;
-	if (typeof API_KEY !== 'string' || !API_KEY) {
+	if (typeof PEXELS_API_KEY !== 'string' || !PEXELS_API_KEY) {
 		throw new Error(
 			'Pexel API key is missing. Please set it in your environment variables.'
 		);
@@ -15,7 +14,7 @@ export async function pexelFetchWrapper<T>(
 
 	const defaultHeaders = {
 		Accept: 'application/json',
-		Authorization: API_KEY,
+		Authorization: PEXELS_API_KEY,
 		'Content-Type': 'application/json',
 	};
 
@@ -29,14 +28,15 @@ export async function pexelFetchWrapper<T>(
 	};
 
 	try {
-		const url = new URL(`${pexelBaseUrl}/${endpoint}`);
+		const url = new URL(`${PEXEL_BASE_URL}/${endpoint}`);
 		// Add query parameters to the URL
 		Object.keys(params).forEach((key) => {
 			if (params[key] !== undefined) {
 				url.searchParams.append(key, String(params[key]));
 			}
 		});
-		const response = await fetch(url, finalOptions);
+		console.log({ url, finalOptions });
+		const response = await fetch(url.toString(), finalOptions);
 		if (!response.ok) {
 			const errorData = (await response.json()) as { message: string };
 
