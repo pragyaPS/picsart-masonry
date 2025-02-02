@@ -71,5 +71,6 @@ The `PhotoList` component is implemented using a masonry virtualized component. 
 
 ## Demo
 Demo recording to demonstrate infinite scrolling with list virtualisation and resizing.  Please note that the demo URL will open in the same tab, so you will need to use the browser's back button to return to the project repository.
+
 https://github.com/user-attachments/assets/e9a2570a-5898-4367-aa0f-819b2d3e09fb
 
